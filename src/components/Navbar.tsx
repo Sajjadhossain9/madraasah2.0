@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "../context";
 import { LANG_LABELS, type Lang } from "../i18n";
+import logoImg from "../assets/logo.png";
 
 const PAGES = [
   "home","about","academic","teachers","scholars","guardians","hafeez","student","notice","gallery","contact","admission","girls",
@@ -17,10 +18,9 @@ export default function Navbar() {
         {/* Logo */}
         <button onClick={() => setPage("home")} className="flex items-center gap-2 group">
           <img
-            src="/image/logo.png"
+            src={logoImg}
             alt="Madrasah Darul Huda Logo"
             className="h-11 w-11 rounded-full object-cover shadow-md transition-transform group-hover:scale-110"
-            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
           <div className="text-start">
             <div className="text-base font-extrabold leading-tight text-emerald-800 dark:text-emerald-300">{t.siteName}</div>
