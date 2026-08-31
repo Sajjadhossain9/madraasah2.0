@@ -8,8 +8,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  // GitHub Pages serves this project from /madraasah2.0/.
-  base: "/madraasah2.0/",
+  // Relative asset URLs work both at /madraasah2.0/ and at a custom/root domain.
+  base: "./",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
