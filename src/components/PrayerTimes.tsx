@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useApp } from "../context";
+import { getStorageItem, setStorageItem } from "../utils/storage";
 
 type Times = Record<string, string>;
 
@@ -11,11 +12,10 @@ export default function PrayerTimes() {
   useEffect(() => {
     const today = new Date();
     const cacheKey = `dh-prayer-${today.toDateString()}`;
-    const cached = localStorage.getItem(cacheKey);
+    const cached = getStorageItem(cacheKey);
     if (cached) {
       try { setTimes(JSON.parse(cached)); setLoading(false); return; } catch {}
     }
-    // Lalmonirhat ~ 25.9923, 89.2847
     fetch(`https://api.aladhan.com/v1/timings/${Math.floor(today.getTime() / 1000)}?latitude=25.9923&longitude=89.2847&method=1`)
       .then((r) => r.json())
       .then((data) => {
@@ -26,7 +26,7 @@ export default function PrayerTimes() {
             Asr: tt.Asr, Maghrib: tt.Maghrib, Isha: tt.Isha,
           };
           setTimes(trimmed);
-          localStorage.setItem(cacheKey, JSON.stringify(trimmed));
+          setStorageItem(cacheKey, JSON.stringify(trimmed));
         }
       })
       .catch(() => {})
