@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useApp } from "../context";
+import { getStorageItem, setStorageItem } from "../utils/storage";
 
 type Ayah = { ar: string; bn: string; ref: string };
 
@@ -17,12 +18,11 @@ export default function DailyAyah() {
   useEffect(() => {
     const today = new Date().toDateString();
     const key = `dh-ayah-${today}`;
-    const cached = localStorage.getItem(key);
+    const cached = getStorageItem(key);
     if (cached) { try { setAyah(JSON.parse(cached)); setLoading(false); return; } catch {} }
 
     const fetchAyah = async (retry = true): Promise<void> => {
       try {
-        // random ayah number 1..6236
         const num = Math.floor(Math.random() * 6236) + 1;
         const [arRes, bnRes] = await Promise.all([
           fetch(`https://api.alquran.cloud/v1/ayah/${num}/ar.alafasy`).then((r) => r.json()),
@@ -35,7 +35,7 @@ export default function DailyAyah() {
         if (ar && bn) {
           const data = { ar, bn, ref: `${surah} : ${aN}` };
           setAyah(data);
-          localStorage.setItem(key, JSON.stringify(data));
+          setStorageItem(key, JSON.stringify(data));
         } else throw new Error("bad data");
       } catch {
         if (retry) return fetchAyah(false);
